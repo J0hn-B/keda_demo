@@ -38,12 +38,12 @@ install_argocd() {
 
     # Install argocd
     echo "$ARGOCD" | kubectl apply -f - --namespace=argocd
+    echo "==> ${GREEN}Waiting for ArgoCD to become available...${NC}"
   fi
 }
 
 # Install argocd applications
 deploy_argocd_apps() {
-  echo "==> ${GREEN}Waiting for ArgoCD to become available...${NC}"
 
   # Verify ArgoCD is available.
   kubectl -n argocd wait --for condition=Available --timeout=600s deployment/argocd-server
@@ -90,7 +90,6 @@ deploy_argocd_apps() {
   echo
   # Verify ArgoCD is available and deploy argocd apps
   kubectl -n argocd wait --for condition=Available --timeout=600s deployment/argocd-server
-  kubectl apply -f k8s/namespaces/keda/keda-autoscaller.yaml
 
   # Update argocd congig map to allow synv waves to be restored for app of apps patern
   ARGOCD_CONGIG_MAP=$(
