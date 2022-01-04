@@ -44,49 +44,6 @@ install_argocd() {
 
 # Install argocd applications
 deploy_argocd_apps() {
-
-  # Verify ArgoCD is available.
-  kubectl -n argocd wait --for condition=Available --timeout=600s deployment/argocd-server
-
-  # Update argocd congig map to allow synv waves to be restored for app of apps patern
-  ARGOCD_CONGIG_MAP=$(
-    cat <<EOF
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: argocd-cm
-  namespace: argocd
-  labels:
-    app.kubernetes.io/name: argocd-cm
-    app.kubernetes.io/part-of: argocd
-data:
-  resource.customizations: |
-    argoproj.io/Application:
-      health.lua: |
-        hs = {}
-        hs.status = "Progressing"
-        hs.message = ""
-        if obj.status ~= nil then
-          if obj.status.health ~= nil then
-            hs.status = obj.status.health.status
-            if obj.status.health.message ~= nil then
-              hs.message = obj.status.health.message
-            end
-          end
-        end
-        return hs
-
-EOF
-  )
-
-  echo "$ARGOCD_CONGIG_MAP" | kubectl apply -f -
-
-  # Deploy argocd applications
-  kubectl apply -f keda-demo.yaml
-}
-
-# Install argocd applications
-deploy_argocd_apps() {
   echo
   # Verify ArgoCD is available and deploy argocd apps
   kubectl -n argocd wait --for condition=Available --timeout=600s deployment/argocd-server
@@ -148,7 +105,6 @@ delete_cluster() {
   if [ "$CLUSTER" ]; then
     echo "==> ${GREEN}Cluster does exist, deleting cluster${NC}"
     k3d cluster delete $CLUSTER_NAME
-    rm -rf k8s/argocd-apps/argocd.installed
   else
     echo "==> ${GREEN}Cluster does not exist${NC}"
   fi
