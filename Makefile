@@ -27,7 +27,7 @@ destroy:
 .PHONY: code_lint
 code_lint:
 	@echo "$(GREEN) ==> Github Super-Linter will validate your source code.$(NC) < https://github.com/github/super-linter >"
-	docker run --rm -e KUBERNETES_KUBEVAL_OPTIONS=--ignore-missing-schemas -e RUN_LOCAL=true \
+	docker run --rm -e VALIDATE_KUBERNETES_KUBEVAL=false -e RUN_LOCAL=true \
 	-v $(REPO):/tmp/lint ghcr.io/github/super-linter:slim-v4
 	
 ifeq ($(shell uname), Linux)
