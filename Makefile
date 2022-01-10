@@ -8,9 +8,8 @@ REPO := $(shell git rev-parse --show-toplevel)
 #? Create a cluster with k3d
 .PHONY: apply
 apply:
-	. ./k3d_cluster.sh && create_cluster && install_argocd \
-	&& deploy_argocd_apps \
-	&& access_argocd
+	. ./k3d_argocd_cluster.sh && create_cluster && install_argocd && access_argocd
+	kubectl apply -f keda-demo.yaml
 
 
 #? Destroy the cluster 
