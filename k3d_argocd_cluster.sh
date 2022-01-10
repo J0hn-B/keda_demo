@@ -5,8 +5,8 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 # Variables
-CLUSTER_NAME="kedacore-cluster"
-CLUSTER=$(k3d cluster list | grep $CLUSTER_NAME)
+CLUSTER_NAME="$(basename "$PWD" | sed 's/_//')-localCluster"
+CLUSTER=$(k3d cluster list | grep "$CLUSTER_NAME")
 
 # Create the k3d cluster
 create_cluster() {
@@ -14,7 +14,7 @@ create_cluster() {
     echo "==> ${GREEN}Cluster:${NC} $CLUSTER"
   else
     echo "==> ${GREEN}Cluster does not exist, creating cluster${NC}"
-    k3d cluster create $CLUSTER_NAME --agents 2
+    k3d cluster create "$CLUSTER_NAME" --agents 2
   fi
 }
 
@@ -40,10 +40,7 @@ install_argocd() {
     echo "$ARGOCD" | kubectl apply -f - --namespace=argocd
     echo "==> ${GREEN}Waiting for ArgoCD to become available...${NC}"
   fi
-}
 
-# Install argocd applications
-deploy_argocd_apps() {
   echo
   # Verify ArgoCD is available and deploy argocd apps
   kubectl -n argocd wait --for condition=Available --timeout=600s deployment/argocd-server
@@ -82,12 +79,12 @@ EOF
   echo "$ARGOCD_CONGIG_MAP" | kubectl apply -f -
 
   # Deploy argocd applications
-  kubectl apply -f keda-demo.yaml
+
 }
 
 # Access the ArgoCD web UI
 access_argocd() {
-  PORT=8080
+  PORT=8079
   echo
   # Return ArgoCD initial password for the web UI
   PASS=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo)
@@ -104,7 +101,7 @@ access_argocd() {
 delete_cluster() {
   if [ "$CLUSTER" ]; then
     echo "==> ${GREEN}Cluster does exist, deleting cluster${NC}"
-    k3d cluster delete $CLUSTER_NAME
+    k3d cluster delete "$CLUSTER_NAME"
   else
     echo "==> ${GREEN}Cluster does not exist${NC}"
   fi
