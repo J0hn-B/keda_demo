@@ -40,7 +40,7 @@ k3d, make, docker-desktop
 
 ![image](https://user-images.githubusercontent.com/40946247/148085440-066e0ae1-9b1a-4c18-bb3a-d95b1f72c025.png)
 
-Access the [argocd dashboard](https://localhost:8080) and sync the keda-demo application.
+Access the [argocd dashboard](https://localhost:8080) and **sync the keda-demo application.**
 
 ![image](https://user-images.githubusercontent.com/40946247/148085152-89d77c41-8e39-410b-be1a-6dcf9f4a565c.png)
 
