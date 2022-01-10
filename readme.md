@@ -36,7 +36,7 @@ k3d, make, docker-desktop
 
 **`$ make apply`**
 
-> **Be sure to wait until the deployment has completed before continuing.**
+> Be sure to wait until the deployment has completed before continuing.
 
 ![image](https://user-images.githubusercontent.com/40946247/148085440-066e0ae1-9b1a-4c18-bb3a-d95b1f72c025.png)
 

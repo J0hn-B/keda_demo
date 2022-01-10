@@ -15,7 +15,7 @@ apply:
 #? Destroy the cluster 
 .PHONY: destroy
 destroy:
-	. ./k3d_cluster.sh && delete_cluster
+	. ./k3d_argocd_cluster.sh && delete_cluster
 
 
 
